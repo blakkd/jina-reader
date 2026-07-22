@@ -1,0 +1,66 @@
+{
+  "parameters": [
+    {
+      "name": "Add API Key for Higher Rate Limit",
+      "description": "Enter your Jina API key to access a higher rate limit. For latest rate limit information, please refer to the table below.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Browser Engine (Quality/Speed)",
+      "description": "Choose the browser engine for fetching the webpage content. This affects the quality, speed, completeness, accessibility of the content.",
+      "value": "Default",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "Default",
+          "description": "Most compatible engine offering good balance between quality and speed."
+        },
+        {
+          "label": "Speed First",
+          "description": "Fastest engine, optimized for speed but unable to handle JavaScript-generated dynamic content."
+        },
+        {
+          "label": "Best Quality",
+          "description": "High-quality engine designed to resolve rendering issues and deliver the best content output."
+        }
+      ]
+    },
+    {
+      "name": "Content Format",
+      "description": "You can control the level of detail in the response to prevent over-filtering. The default pipeline is optimized for most websites and LLM input.",
+      "value": "Default",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "Default",
+          "description": "The default pipeline optimized for most websites and LLM input."
+        },
+        {
+          "label": "Markdown",
+          "description": "Returns the markdown directly from the HTML, bypassing the readability filtering."
+        },
+        {
+          "label": "HTML",
+          "description": "Returns documentElement.outerHTML."
+        },
+        {
+          "label": "Text",
+          "description": "Returns document.body.innerText."
+        }
+      ]
+    },
+    {
+      "name": "Timeout (seconds)",
+      "description": "Maximum time to wait for page load. Increase for slow pages, decrease for simple static pages.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Remove All Images",
+      "description": "Strip all images from the output. Reduces token usage when images are not needed.",
+      "value": "false",
+      "fieldType": "toggle"
+    }
+  ]
+}
