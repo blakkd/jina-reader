@@ -693,7 +693,7 @@ async function readPage() {
 
     if (contentType.includes('application/json')) {
       const json = await resp.json();
-      content = json.data || '';
+      content = typeof json.data === 'string' ? json.data : JSON.stringify(json.data, null, 2);
     } else if (contentType.includes('text/event-stream')) {
       // For SSE, collect all events
       const reader = resp.body.getReader();
