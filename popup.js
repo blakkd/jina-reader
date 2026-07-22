@@ -121,6 +121,10 @@ function buildApiRequest(params) {
 
   // Max Tokens
   if (merged['Max Tokens'] === 'true' && merged['maxTokensValue']) {
+    const maxTokensNum = parseInt(merged['maxTokensValue'], 10);
+    if (isNaN(maxTokensNum) || maxTokensNum < 500) {
+      throw new Error('Max Tokens must be at least 500.');
+    }
     headers['X-Max-Tokens'] = merged['maxTokensValue'];
   }
 
@@ -448,7 +452,7 @@ function createExtraInput(def) {
     'Add API Key for Higher Rate Limit': { type: 'password', placeholder: 'jina_xxxx...', key: 'apiKey' },
     'Timeout (seconds)': { type: 'number', placeholder: '60', key: 'timeoutValue' },
     'Token Budget': { type: 'number', placeholder: '10000', key: 'tokenBudgetValue' },
-    'Max Tokens': { type: 'number', placeholder: '50000', key: 'maxTokensValue' },
+    'Max Tokens': { type: 'number', placeholder: '50000', key: 'maxTokensValue', min: 500 },
     'Forward Cookie': { type: 'text', placeholder: 'key=value; key2=value2', key: 'cookieValue' },
     'Use a Proxy Server': { type: 'text', placeholder: 'http://user:pass@host:port', key: 'proxyValue' },
     'Use a Country-Specific Proxy Server': { type: 'text', placeholder: 'US, auto, none', key: 'proxyCountryValue' },
@@ -482,6 +486,10 @@ function createExtraInput(def) {
   input.dataset.key = config.key || def.name;
 
   input.value = '';
+
+  if (config.min != null) {
+    input.min = config.min;
+  }
 
   if (config.type === 'password') {
     const wrap = document.createElement('div');
