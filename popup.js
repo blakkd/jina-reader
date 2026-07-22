@@ -121,8 +121,10 @@ function buildApiRequest(params) {
     headers['X-Proxy'] = params['proxyCountryValue'];
   }
 
-  // Bypass Cached Content (always enabled)
-  headers['X-No-Cache'] = 'true';
+  // Bypass Cached Content (defaults to true for Simple level)
+  if (params['Bypass Cached Content'] !== 'false') {
+    headers['X-No-Cache'] = 'true';
+  }
 
   // Cache Tolerance
   if (params['Cache Tolerance (seconds)'] === 'true' && params['cacheToleranceValue']) {

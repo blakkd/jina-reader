@@ -141,7 +141,7 @@
     {
       "name": "Bypass Cached Content",
       "description": "Our API caches URL contents for a certain amount of time. Set it to true to ignore the cached result and fetch the content from the URL directly.",
-      "value": "false",
+      "value": "true",
       "fieldType": "toggle"
     },
     {
