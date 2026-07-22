@@ -487,9 +487,9 @@ function createExtraInput(def) {
 
   input.value = '';
 
-  if (config.min != null) {
-    input.min = config.min;
-  }
+  // Don't set input.min — let the value go below min so our JS can
+  // clamp it and show the error. Browser-native min blocks the step
+  // silently, preventing any event from firing.
 
   let errorSpan = null;
 
@@ -498,9 +498,15 @@ function createExtraInput(def) {
     const val = parseInt(input.value, 10);
     const isValid = isNaN(val) || !input.value || val >= config.min;
     errorSpan.classList.toggle('show', !isValid);
-    if (!isValid && autoDismiss) {
-      clearTimeout(errorSpan._timer);
-      errorSpan._timer = setTimeout(() => { errorSpan.classList.remove('show'); }, 2500);
+    if (!isValid) {
+      // Auto-correct to minimum
+      if (input.value !== String(config.min)) {
+        input.value = config.min;
+      }
+      if (autoDismiss) {
+        clearTimeout(errorSpan._timer);
+        errorSpan._timer = setTimeout(() => { errorSpan.classList.remove('show'); }, 2500);
+      }
     }
   };
 
@@ -537,20 +543,6 @@ function createExtraInput(def) {
   input.addEventListener('input', (e) => {
     handleParamChange(config.key || def.name, e.target.value, null);
     showError();
-  });
-
-  input.addEventListener('keydown', (e) => {
-    if (
-      (e.key === 'ArrowDown' || e.key === 'Down') &&
-      parseInt(input.value, 10) <= config.min
-    ) {
-      e.preventDefault();
-      if (errorSpan) {
-        errorSpan.classList.add('show');
-        clearTimeout(errorSpan._timer);
-        errorSpan._timer = setTimeout(() => { errorSpan.classList.remove('show'); }, 2500);
-      }
-    }
   });
 
   extra.appendChild(input);
