@@ -491,6 +491,27 @@ function createExtraInput(def) {
     input.min = config.min;
   }
 
+  let errorSpan = null;
+
+  const showError = (autoDismiss = true) => {
+    if (!errorSpan) return;
+    const val = parseInt(input.value, 10);
+    const isValid = isNaN(val) || !input.value || val >= config.min;
+    errorSpan.classList.toggle('show', !isValid);
+    if (!isValid && autoDismiss) {
+      clearTimeout(errorSpan._timer);
+      errorSpan._timer = setTimeout(() => { errorSpan.classList.remove('show'); }, 2500);
+    }
+  };
+
+  if (config.min != null) {
+    errorSpan = document.createElement('span');
+    errorSpan.className = 'min-value-error';
+    errorSpan.textContent = `Minimum value is ${config.min}.`;
+    errorSpan._validate = () => showError(false);
+    extra.appendChild(errorSpan);
+  }
+
   if (config.type === 'password') {
     const wrap = document.createElement('div');
     wrap.style.display = 'flex';
@@ -515,9 +536,28 @@ function createExtraInput(def) {
 
   input.addEventListener('input', (e) => {
     handleParamChange(config.key || def.name, e.target.value, null);
+    showError();
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (
+      (e.key === 'ArrowDown' || e.key === 'Down') &&
+      parseInt(input.value, 10) <= config.min
+    ) {
+      e.preventDefault();
+      if (errorSpan) {
+        errorSpan.classList.add('show');
+        clearTimeout(errorSpan._timer);
+        errorSpan._timer = setTimeout(() => { errorSpan.classList.remove('show'); }, 2500);
+      }
+    }
   });
 
   extra.appendChild(input);
+
+  // Run initial validation synchronously to set correct error state
+  showError(false);
+
   return extra;
 }
 
@@ -534,21 +574,21 @@ async function handleParamChange(name, value, def) {
   await chrome.storage.local.set({ [paramKey(name)]: value });
 
   // Toggle extra visibility
-  if (def.fieldType === 'toggle') {
+  if (def && def.fieldType === 'toggle') {
     const item = document.querySelector(`.param-item[data-name="${def.name}"]`);
     const extra = item?.querySelector('.param-extra');
     if (extra) {
       extra.classList.toggle('visible', value === 'true');
 
       // Restore stored value into the extra input
-      const key = extra.dataset.param;
+      const param = extra.dataset.param;
       const storedKey = extra.querySelector('input, textarea')?.dataset.key;
       if (storedKey) {
-        const key = paramKey(storedKey);
-        const stored = await chrome.storage.local.get(key);
+        const storageKey = paramKey(storedKey);
+        const stored = await chrome.storage.local.get(storageKey);
         const inputEl = extra.querySelector('input, textarea');
-        if (inputEl && stored[key] !== undefined) {
-          inputEl.value = stored[key];
+        if (inputEl && stored[storageKey] !== undefined) {
+          inputEl.value = stored[storageKey];
         }
       }
     }
@@ -610,8 +650,14 @@ async function loadParams(level) {
         const storedKey = paramKey(key);
         if (allStored[storedKey] !== undefined) {
           el.value = allStored[storedKey];
+          el.dispatchEvent(new InputEvent('input'));
         }
       }
+    });
+
+    // Re-validate min-value fields without auto-dismiss timer
+    document.querySelectorAll('.min-value-error').forEach((span) => {
+      if (span._validate) span._validate();
     });
   } catch (err) {
     console.error('Failed to load parameters:', err);

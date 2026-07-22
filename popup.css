@@ -392,3 +392,14 @@ header {
   border-color: #ccc;
   color: #333;
 }
+
+.min-value-error {
+  display: none;
+  color: #b91c1c;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.min-value-error.show {
+  display: block;
+}
