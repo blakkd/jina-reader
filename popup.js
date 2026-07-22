@@ -629,20 +629,9 @@ async function displayResult(content, mode) {
   code { font-size: 13px; }
   a { color: #2563eb; }
   img { max-width: 100%; }
-  .jina-banner {
-    background: #2563eb;
-    color: white;
-    padding: 8px 16px;
-    font-size: 12px;
-    text-align: center;
-    margin-bottom: 20px;
-    border-radius: 4px;
-  }
-  .jina-banner a { color: white; }
 </style>
 </head>
 <body>
-<div class="jina-banner">Extracted by <a href="https://jina.ai" target="_blank">Jina Reader</a></div>
 ${content}
 </body>
 </html>`;
