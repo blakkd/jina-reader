@@ -514,7 +514,7 @@ function createExtraInput(def) {
   }
 
   input.addEventListener('input', (e) => {
-    handleParamChange(config.key || def.name, e.target.value, def);
+    handleParamChange(config.key || def.name, e.target.value, null);
   });
 
   extra.appendChild(input);
