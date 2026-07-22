@@ -4,13 +4,16 @@
   box-sizing: border-box;
 }
 
+html {
+  min-width: 400px;
+  max-width: 400px;
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 13px;
   color: #1a1a1a;
   background: #fafafa;
-  min-width: 380px;
-  max-width: 420px;
 }
 
 .container {
@@ -65,19 +68,7 @@ header {
 }
 
 .params-section {
-  max-height: 340px;
-  overflow-y: auto;
   margin-bottom: 12px;
-  padding-right: 4px;
-}
-
-.params-section::-webkit-scrollbar {
-  width: 4px;
-}
-
-.params-section::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 2px;
 }
 
 .param-item {
@@ -212,8 +203,9 @@ header {
 }
 
 .actions-section {
-  border-top: 1px solid #e8e8e8;
-  padding-top: 10px;
+  border-bottom: 1px solid #e8e8e8;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .url-field,
