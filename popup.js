@@ -285,6 +285,7 @@ function buildApiRequest(params) {
 function renderParams(defs) {
   const container = document.getElementById('parameters');
   container.innerHTML = '';
+  const level = currentLevel;
 
   defs.forEach((def) => {
     const item = document.createElement('div');
@@ -376,6 +377,13 @@ function renderParams(defs) {
 
     container.appendChild(item);
   });
+
+  // Reset button for current level
+  const resetBtn = document.createElement('button');
+  resetBtn.className = 'reset-btn';
+  resetBtn.textContent = `Reset ${level.charAt(0).toUpperCase() + level.slice(1)} Defaults`;
+  resetBtn.addEventListener('click', () => resetLevelParams(level));
+  container.appendChild(resetBtn);
 }
 
 function createExtraInput(def) {
@@ -486,6 +494,24 @@ async function handleParamChange(name, value, def) {
   }
 }
 
+// Reset level params to defaults
+async function resetLevelParams(level) {
+  const keysToRemove = paramDefs
+    .filter((p) => !isSharedParam(p.name))
+    .map((p) => paramKey(p.name));
+
+  // Also remove extra input keys for this level
+  document.querySelectorAll('.param-extra input, .param-extra textarea').forEach((el) => {
+    const key = el.dataset.key;
+    if (key && !isSharedParam(key)) {
+      keysToRemove.push(paramKey(key));
+    }
+  });
+
+  await chrome.storage.local.remove(keysToRemove);
+  await loadParams(level);
+}
+
 // Switch level
 async function switchLevel(level) {
   currentLevel = level;
@@ -498,6 +524,7 @@ async function switchLevel(level) {
 }
 
 async function loadParams(level) {
+  currentLevel = level;
   try {
     const resp = await fetch(PARAM_FILES[level]);
     const data = await resp.json();
