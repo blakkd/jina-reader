@@ -27,30 +27,6 @@
       ]
     },
     {
-      "name": "Content Format",
-      "description": "You can control the level of detail in the response to prevent over-filtering. The default pipeline is optimized for most websites and LLM input.",
-      "value": "Default",
-      "fieldType": "select",
-      "options": [
-        {
-          "label": "Default",
-          "description": "The default pipeline optimized for most websites and LLM input."
-        },
-        {
-          "label": "Markdown",
-          "description": "Returns the markdown directly from the HTML, bypassing the readability filtering."
-        },
-        {
-          "label": "HTML",
-          "description": "Returns documentElement.outerHTML."
-        },
-        {
-          "label": "Text",
-          "description": "Returns document.body.innerText."
-        }
-      ]
-    },
-    {
       "name": "Timeout (seconds)",
       "description": "Maximum time to wait for page load. Increase for slow pages, decrease for simple static pages.",
       "value": "false",
