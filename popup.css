@@ -67,6 +67,52 @@ header {
   color: #333;
 }
 
+.level-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.divider-bracket {
+  width: 90%;
+  height: 4px;
+  border: none;
+  border-bottom: 2px dashed #ccc;
+  border-radius: 2px;
+  position: relative;
+}
+
+.divider-bracket::before,
+.divider-bracket::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 4px;
+  height: 8px;
+  border-bottom: 2px dashed #ccc;
+}
+
+.divider-bracket::before {
+  left: 0;
+  border-right: 2px dashed #ccc;
+  border-bottom: none;
+}
+
+.divider-bracket::after {
+  right: 0;
+  border-left: 2px dashed #ccc;
+  border-bottom: none;
+}
+
+.divider-label {
+  font-size: 10px;
+  color: #999;
+  margin-top: 3px;
+  letter-spacing: 0.2px;
+}
+
 .params-section {
   margin-bottom: 12px;
 }
