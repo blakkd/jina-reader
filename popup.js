@@ -36,7 +36,7 @@ function buildApiRequest(params) {
 
   // Content Format
   const formatMap = {
-    'Default': '',
+    'Default': null,
     'Markdown': 'markdown',
     'HTML': 'html',
     'Text': 'text',
