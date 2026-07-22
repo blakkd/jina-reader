@@ -31,12 +31,6 @@
       "description": "Maximum time to wait for page load. Increase for slow pages, decrease for simple static pages.",
       "value": "false",
       "fieldType": "toggle"
-    },
-    {
-      "name": "Remove All Images",
-      "description": "Strip all images from the output. Reduces token usage when images are not needed.",
-      "value": "false",
-      "fieldType": "toggle"
     }
   ]
 }

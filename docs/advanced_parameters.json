@@ -145,6 +145,12 @@
       "fieldType": "toggle"
     },
     {
+      "name": "Preserve Base64 Images",
+      "description": "Keep inline base64-encoded images in markdown output instead of converting them to external URLs.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
       "name": "Do Not Cache or Track",
       "description": "Prevent this request from being cached or logged on our servers. Use for sensitive URLs.",
       "value": "false",
