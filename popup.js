@@ -9,19 +9,72 @@ const PARAM_FILES = {
 let currentLevel = 'advanced';
 let paramDefs = [];
 
+// Defaults for ALL parameters across every level, so switching to a lower
+// level never inherits values from a higher level.
+const ALL_DEFAULTS = {
+  'Add API Key for Higher Rate Limit': 'false',
+  'Browser Engine (Quality/Speed)': 'Default',
+  'Content Format': 'Default',
+  'JSON Response': 'false',
+  'Timeout (seconds)': 'false',
+  'Token Budget': 'false',
+  'Max Tokens': 'false',
+  'Use ReaderLM-v2': 'false',
+  'Extract Only (CSS Selector)': 'false',
+  'Wait For (CSS Selector)': 'false',
+  'Exclude (CSS Selector)': 'false',
+  'Remove All Images': 'false',
+  'OpenAI Citation Format': 'false',
+  'Links Summary Section': 'None',
+  'Images Summary Section': 'None',
+  'Browser Viewport Size': 'false',
+  'Forward Cookie': 'false',
+  'Image Caption': 'false',
+  'Use a Proxy Server': 'false',
+  'Use a Country-Specific Proxy Server': 'false',
+  'Bypass Cached Content': 'true',
+  'Cache Tolerance (seconds)': 'false',
+  'Page Ready Timing': 'Default',
+  'Custom User-Agent': 'false',
+  'Custom Referer': 'false',
+  'Preserve Base64 Images': 'false',
+  'Do Not Cache or Track': 'false',
+  'Github Flavored Markdown': 'Enabled',
+  'Stream Mode': 'false',
+  'Customize Browser Locale': 'false',
+  'Respect robots.txt': 'false',
+  'Include iframe Content': 'false',
+  'Include Shadow DOM': 'false',
+  'Use Final URL as Base': 'false',
+  'Local PDF/HTML file': '',
+  'Run JavaScript Before Extraction': 'false',
+  'Heading Style': 'Hash Style',
+  'Horizontal Rule Style': 'false',
+  'Bullet Point Style': '*',
+  'Emphasis Style': '_',
+  'Strong Emphasis Style': '**',
+  'Link Style': 'Inline',
+  'EU Residency': 'false',
+};
+
 // Mapping from friendly parameter name → API header/query param
 function buildApiRequest(params) {
   const headers = {};
   const query = {};
 
+  // Start with defaults for EVERY parameter, then override with what the
+  // current level exposes. This prevents higher-level settings from leaking
+  // into lower levels.
+  const merged = { ...ALL_DEFAULTS, ...params };
+
   // Server selection
-  const server = params['EU Residency'] === 'true'
+  const server = merged['EU Residency'] === 'true'
     ? 'https://eu-r-beta.jina.ai'
     : 'https://r.jina.ai';
 
   // API Key
-  if (params['Add API Key for Higher Rate Limit'] === 'true' && params['apiKey']) {
-    headers['Authorization'] = `Bearer ${params['apiKey']}`;
+  if (merged['Add API Key for Higher Rate Limit'] === 'true' && merged['apiKey']) {
+    headers['Authorization'] = `Bearer ${merged['apiKey']}`;
   }
 
   // Browser Engine
@@ -31,7 +84,7 @@ function buildApiRequest(params) {
     'Best Quality': 'browser',
     'Experimental': 'cf-browser-rendering',
   };
-  const engineVal = engineMap[params['Browser Engine (Quality/Speed)']];
+  const engineVal = engineMap[merged['Browser Engine (Quality/Speed)']];
   if (engineVal) headers['X-Engine'] = engineVal;
 
   // Content Format
@@ -43,41 +96,41 @@ function buildApiRequest(params) {
     'Screenshot': 'screenshot',
     'Pageshot': 'pageshot',
   };
-  const formatVal = formatMap[params['Content Format']];
+  const formatVal = formatMap[merged['Content Format']];
   if (formatVal) headers['X-Respond-With'] = formatVal;
 
   // JSON Response
-  if (params['JSON Response'] === 'true') {
+  if (merged['JSON Response'] === 'true') {
     headers['Accept'] = 'application/json';
   }
 
   // User wants ReaderLM-v2
-  if (params['Use ReaderLM-v2'] === 'true') {
+  if (merged['Use ReaderLM-v2'] === 'true') {
     headers['X-Respond-With'] = headers['X-Respond-With'] ? `${headers['X-Respond-With']},readerlm-v2` : 'readerlm-v2';
   }
 
   // Timeout
-  if (params['Timeout (seconds)'] === 'true' && params['timeoutValue']) {
-    headers['X-Timeout'] = params['timeoutValue'];
+  if (merged['Timeout (seconds)'] === 'true' && merged['timeoutValue']) {
+    headers['X-Timeout'] = merged['timeoutValue'];
   }
 
   // Token Budget
-  if (params['Token Budget'] === 'true' && params['tokenBudgetValue']) {
-    headers['X-Token-Budget'] = params['tokenBudgetValue'];
+  if (merged['Token Budget'] === 'true' && merged['tokenBudgetValue']) {
+    headers['X-Token-Budget'] = merged['tokenBudgetValue'];
   }
 
   // Max Tokens
-  if (params['Max Tokens'] === 'true' && params['maxTokensValue']) {
-    headers['X-Max-Tokens'] = params['maxTokensValue'];
+  if (merged['Max Tokens'] === 'true' && merged['maxTokensValue']) {
+    headers['X-Max-Tokens'] = merged['maxTokensValue'];
   }
 
   // Remove All Images
-  if (params['Remove All Images'] === 'true') {
+  if (merged['Remove All Images'] === 'true') {
     headers['X-Retain-Images'] = 'none';
   }
 
   // OpenAI Citation Format
-  if (params['OpenAI Citation Format'] === 'true') {
+  if (merged['OpenAI Citation Format'] === 'true') {
     headers['X-Retain-Links'] = 'gpt-oss';
   }
 
@@ -87,7 +140,7 @@ function buildApiRequest(params) {
     'Dedup': 'true',
     'All': 'true',
   };
-  if (linksSummaryMap[params['Links Summary Section']]) {
+  if (linksSummaryMap[merged['Links Summary Section']]) {
     headers['X-With-links-Summary'] = 'true';
   }
 
@@ -97,47 +150,47 @@ function buildApiRequest(params) {
     'Dedup': 'true',
     'All': 'true',
   };
-  if (imgSummaryMap[params['Images Summary Section']]) {
+  if (imgSummaryMap[merged['Images Summary Section']]) {
     headers['X-With-Images-Summary'] = 'true';
   }
 
   // Forward Cookie
-  if (params['Forward Cookie'] === 'true' && params['cookieValue']) {
-    headers['X-Set-Cookie'] = params['cookieValue'];
+  if (merged['Forward Cookie'] === 'true' && merged['cookieValue']) {
+    headers['X-Set-Cookie'] = merged['cookieValue'];
   }
 
   // Image Caption
-  if (params['Image Caption'] === 'true') {
+  if (merged['Image Caption'] === 'true') {
     headers['X-With-Generated-Alt'] = 'true';
   }
 
   // Proxy
-  if (params['Use a Proxy Server'] === 'true' && params['proxyValue']) {
-    headers['X-Proxy-Url'] = params['proxyValue'];
+  if (merged['Use a Proxy Server'] === 'true' && merged['proxyValue']) {
+    headers['X-Proxy-Url'] = merged['proxyValue'];
   }
 
   // Country-Specific Proxy
-  if (params['Use a Country-Specific Proxy Server'] === 'true' && params['proxyCountryValue']) {
-    headers['X-Proxy'] = params['proxyCountryValue'];
+  if (merged['Use a Country-Specific Proxy Server'] === 'true' && merged['proxyCountryValue']) {
+    headers['X-Proxy'] = merged['proxyCountryValue'];
   }
 
   // Bypass Cached Content (defaults to true for Simple level)
-  if (params['Bypass Cached Content'] !== 'false') {
+  if (merged['Bypass Cached Content'] !== 'false') {
     headers['X-No-Cache'] = 'true';
   }
 
   // Cache Tolerance
-  if (params['Cache Tolerance (seconds)'] === 'true' && params['cacheToleranceValue']) {
-    headers['X-Cache-Tolerance'] = params['cacheToleranceValue'];
+  if (merged['Cache Tolerance (seconds)'] === 'true' && merged['cacheToleranceValue']) {
+    headers['X-Cache-Tolerance'] = merged['cacheToleranceValue'];
   }
 
   // Preserve Base64 Images
-  if (params['Preserve Base64 Images'] === 'true') {
+  if (merged['Preserve Base64 Images'] === 'true') {
     headers['X-Keep-Img-Data-Url'] = 'true';
   }
 
   // Do Not Cache or Track
-  if (params['Do Not Cache or Track'] === 'true') {
+  if (merged['Do Not Cache or Track'] === 'true') {
     headers['DNT'] = '1';
   }
 
@@ -147,23 +200,23 @@ function buildApiRequest(params) {
     'Disabled': 'true',
     'No GFM Table': 'no-table',
   };
-  if (gfmMap[params['Github Flavored Markdown']]) {
-    headers['X-No-Gfm'] = gfmMap[params['Github Flavored Markdown']];
+  if (gfmMap[merged['Github Flavored Markdown']]) {
+    headers['X-No-Gfm'] = gfmMap[merged['Github Flavored Markdown']];
   }
 
   // Stream Mode
-  if (params['Stream Mode'] === 'true') {
+  if (merged['Stream Mode'] === 'true') {
     headers['Accept'] = 'text/event-stream';
   }
 
   // Browser Locale
-  if (params['Customize Browser Locale'] === 'true' && params['localeValue']) {
-    headers['X-Locale'] = params['localeValue'];
+  if (merged['Customize Browser Locale'] === 'true' && merged['localeValue']) {
+    headers['X-Locale'] = merged['localeValue'];
   }
 
   // robots.txt
-  if (params['Respect robots.txt'] === 'true') {
-    const robotsVal = params['robotsTxtValue'] || 'true';
+  if (merged['Respect robots.txt'] === 'true') {
+    const robotsVal = merged['robotsTxtValue'] || 'true';
     headers['X-Robots-Txt'] = robotsVal;
   }
 
@@ -172,28 +225,28 @@ function buildApiRequest(params) {
     'Underline Style': 'setext',
     'Hash Style': 'atx',
   };
-  const headingVal = headingMap[params['Heading Style']];
+  const headingVal = headingMap[merged['Heading Style']];
   if (headingVal) headers['X-Md-Heading-Style'] = headingVal;
 
   // Horizontal Rule Style
-  if (params['Horizontal Rule Style'] === 'true' && params['hrStyleValue']) {
-    headers['X-Md-Hr'] = params['hrStyleValue'];
+  if (merged['Horizontal Rule Style'] === 'true' && merged['hrStyleValue']) {
+    headers['X-Md-Hr'] = merged['hrStyleValue'];
   }
 
   // Bullet Point Style
   // Default is * so only set if changed
-  if (params['Bullet Point Style'] && params['Bullet Point Style'] !== '*') {
-    headers['X-Md-Bullet-List-Marker'] = params['Bullet Point Style'];
+  if (merged['Bullet Point Style'] && merged['Bullet Point Style'] !== '*') {
+    headers['X-Md-Bullet-List-Marker'] = merged['Bullet Point Style'];
   }
 
   // Emphasis Style
-  if (params['Emphasis Style'] && params['Emphasis Style'] !== '_') {
-    headers['X-Md-Em-Delimiter'] = params['Emphasis Style'];
+  if (merged['Emphasis Style'] && merged['Emphasis Style'] !== '_') {
+    headers['X-Md-Em-Delimiter'] = merged['Emphasis Style'];
   }
 
   // Strong Emphasis Style
-  if (params['Strong Emphasis Style'] && params['Strong Emphasis Style'] !== '**') {
-    headers['X-Md-Strong-Delimiter'] = params['Strong Emphasis Style'];
+  if (merged['Strong Emphasis Style'] && merged['Strong Emphasis Style'] !== '**') {
+    headers['X-Md-Strong-Delimiter'] = merged['Strong Emphasis Style'];
   }
 
   // Link Style
@@ -202,29 +255,29 @@ function buildApiRequest(params) {
     'Reference': 'referenced',
     'Plain Text': 'discarded',
   };
-  if (params['Link Style'] && params['Link Style'] !== 'Inline') {
-    headers['X-Md-Link-Style'] = linkStyleMap[params['Link Style']];
+  if (merged['Link Style'] && merged['Link Style'] !== 'Inline') {
+    headers['X-Md-Link-Style'] = linkStyleMap[merged['Link Style']];
   }
 
   // Expert-only params
 
   // Extract Only (CSS Selector)
-  if (params['Extract Only (CSS Selector)'] === 'true' && params['targetSelectorValue']) {
-    headers['X-Target-Selector'] = params['targetSelectorValue'];
+  if (merged['Extract Only (CSS Selector)'] === 'true' && merged['targetSelectorValue']) {
+    headers['X-Target-Selector'] = merged['targetSelectorValue'];
   }
 
   // Wait For (CSS Selector)
-  if (params['Wait For (CSS Selector)'] === 'true' && params['waitForSelectorValue']) {
-    headers['X-Wait-For-Selector'] = params['waitForSelectorValue'];
+  if (merged['Wait For (CSS Selector)'] === 'true' && merged['waitForSelectorValue']) {
+    headers['X-Wait-For-Selector'] = merged['waitForSelectorValue'];
   }
 
   // Exclude (CSS Selector)
-  if (params['Exclude (CSS Selector)'] === 'true' && params['removeSelectorValue']) {
-    headers['X-Remove-Selector'] = params['removeSelectorValue'];
+  if (merged['Exclude (CSS Selector)'] === 'true' && merged['removeSelectorValue']) {
+    headers['X-Remove-Selector'] = merged['removeSelectorValue'];
   }
 
   // Browser Viewport Size
-  if (params['Browser Viewport Size'] === 'true' && params['viewportValue']) {
+  if (merged['Browser Viewport Size'] === 'true' && merged['viewportValue']) {
     // This is a non-standard param, we pass it if the API accepts it
     // For now skip since it's not in the OpenAPI spec
   }
@@ -239,43 +292,43 @@ function buildApiRequest(params) {
     'Media Loaded': 'media-idle',
     'Network Idle': 'network-idle',
   };
-  if (timingMap[params['Page Ready Timing']]) {
-    headers['X-Respond-Timing'] = timingMap[params['Page Ready Timing']];
+  if (timingMap[merged['Page Ready Timing']]) {
+    headers['X-Respond-Timing'] = timingMap[merged['Page Ready Timing']];
   }
 
   // Custom User-Agent
-  if (params['Custom User-Agent'] === 'true' && params['userAgentValue']) {
-    headers['X-User-Agent'] = params['userAgentValue'];
+  if (merged['Custom User-Agent'] === 'true' && merged['userAgentValue']) {
+    headers['X-User-Agent'] = merged['userAgentValue'];
   }
 
   // Custom Referer
-  if (params['Custom Referer'] === 'true' && params['refererValue']) {
-    headers['X-Referer'] = params['refererValue'];
+  if (merged['Custom Referer'] === 'true' && merged['refererValue']) {
+    headers['X-Referer'] = merged['refererValue'];
   }
 
   // Include iframe Content
-  if (params['Include iframe Content'] === 'true') {
+  if (merged['Include iframe Content'] === 'true') {
     headers['X-With-Iframe'] = 'true';
   }
 
   // Include Shadow DOM
-  if (params['Include Shadow DOM'] === 'true') {
+  if (merged['Include Shadow DOM'] === 'true') {
     headers['X-With-Shadow-Dom'] = 'true';
   }
 
   // Use Final URL as Base
-  if (params['Use Final URL as Base'] === 'true') {
+  if (merged['Use Final URL as Base'] === 'true') {
     headers['X-Base'] = 'final';
   }
 
   // Local PDF/HTML file (passed as query param)
-  if (params['Local PDF/HTML file']) {
-    query['html'] = params['Local PDF/HTML file'];
+  if (merged['Local PDF/HTML file']) {
+    query['html'] = merged['Local PDF/HTML file'];
   }
 
   // Run JavaScript Before Extraction
-  if (params['Run JavaScript Before Extraction'] === 'true' && params['injectScriptValue']) {
-    query['injectPageScript'] = params['injectScriptValue'];
+  if (merged['Run JavaScript Before Extraction'] === 'true' && merged['injectScriptValue']) {
+    query['injectPageScript'] = merged['injectScriptValue'];
   }
 
   return { server, headers };
