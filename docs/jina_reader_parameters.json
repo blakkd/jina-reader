@@ -1,0 +1,430 @@
+{
+  "parameters": [
+    {
+      "name": "Add API Key for Higher Rate Limit",
+      "description": "Enter your Jina API key to access a higher rate limit. For latest rate limit information, please refer to the table below.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Browser Engine (Quality/Speed)",
+      "description": "Choose the browser engine for fetching the webpage content. This affects the quality, speed, completeness, accessibility of the content.",
+      "value": "Default",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "Default",
+          "description": "Most compatible engine offering good balance between quality and speed."
+        },
+        {
+          "label": "Speed First",
+          "description": "Fastest engine, optimized for speed but unable to handle JavaScript-generated dynamic content."
+        },
+        {
+          "label": "Best Quality",
+          "description": "High-quality engine designed to resolve rendering issues and deliver the best content output."
+        },
+        {
+          "label": "Experimental",
+          "description": "Fast engine capable of handling JavaScript-heavy websites we are experimenting with. Not recommended for production use. We may change its behavior."
+        }
+      ]
+    },
+    {
+      "name": "Content Format",
+      "description": "You can control the level of detail in the response to prevent over-filtering. The default pipeline is optimized for most websites and LLM input.",
+      "value": "Default",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "Default",
+          "description": "The default pipeline optimized for most websites and LLM input."
+        },
+        {
+          "label": "Markdown",
+          "description": "Returns the markdown directly from the HTML, bypassing the readability filtering."
+        },
+        {
+          "label": "HTML",
+          "description": "Returns documentElement.outerHTML."
+        },
+        {
+          "label": "Text",
+          "description": "Returns document.body.innerText."
+        },
+        {
+          "label": "Screenshot",
+          "description": "Returns the image URL of the first screen."
+        },
+        {
+          "label": "Pageshot",
+          "description": "Returns the image URL of full page screenshot (with best effort)."
+        }
+      ]
+    },
+    {
+      "name": "JSON Response",
+      "description": "The response will be in JSON format, containing the URL, title, content, and timestamp (if available). In Search mode, it returns a list of five entries, each following the described JSON structure.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Timeout (seconds)",
+      "description": "Maximum time to wait for page load. Increase for slow pages, decrease for simple static pages.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Token Budget",
+      "description": "Limits the maximum number of tokens used for this request. Exceeding this limit will cause the request to fail.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Use ReaderLM-v2",
+      "description": "Uses ReaderLM-v2 for HTML to Markdown conversion, to deliver high-quality results for websites with complex structures and contents. Costs 3x tokens!",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Extract Only (CSS Selector)",
+      "description": "Only extract content matching these CSS selectors. Example: article, .main-content, #post-body",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Wait For (CSS Selector)",
+      "description": "Wait until these elements appear before extracting content. Useful for dynamically loaded content.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Exclude (CSS Selector)",
+      "description": "Remove these elements before extraction. Example: nav, footer, .sidebar, #ads",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Remove All Images",
+      "description": "Strip all images from the output. Reduces token usage when images are not needed.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "OpenAI Citation Format",
+      "description": "Format links for OpenAI's web browsing tool. Uses special citation markers compatible with GPT models.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Links Summary Section",
+      "description": "A \"Buttons & Links\" section will be created at the end. This helps the downstream LLMs or web agents navigating the page or take further actions.",
+      "value": "None",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "None",
+          "description": "Keep links inline."
+        },
+        {
+          "label": "Dedup",
+          "description": "List unique links at the end."
+        },
+        {
+          "label": "All",
+          "description": "List all links at the end."
+        }
+      ]
+    },
+    {
+      "name": "Images Summary Section",
+      "description": "An \"Images\" section will be created at the end. This gives the downstream LLMs an overview of all visuals on the page, which may improve reasoning.",
+      "value": "None",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "None",
+          "description": "Keep images inline."
+        },
+        {
+          "label": "Dedup",
+          "description": "List unique images at the end."
+        },
+        {
+          "label": "All",
+          "description": "List all images at the end."
+        }
+      ]
+    },
+    {
+      "name": "Browser Viewport Size",
+      "description": "Set browser window dimensions. Affects responsive layouts and content visibility.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Forward Cookie",
+      "description": "Our API server can forward your custom cookie settings when accessing the URL, which is useful for pages requiring extra authentication. Note that requests with cookies will not be cached.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Image Caption",
+      "description": "Captions all images at the specified URL, adding 'Image [idx]: [caption]' as an alt tag for those without one. This allows downstream LLMs to interact with the images in activities such as reasoning and summarizing.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Use a Proxy Server",
+      "description": "Our API server can utilize your proxy to access URLs, which is helpful for pages accessible only through specific proxies.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Use a Country-Specific Proxy Server",
+      "description": "Set country code for location-based proxy server. Use 'auto' for optimal selection or 'none' to disable.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Bypass Cached Content",
+      "description": "Our API caches URL contents for a certain amount of time. Set it to true to ignore the cached result and fetch the content from the URL directly.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Cache Tolerance (seconds)",
+      "description": "Accept cached content if younger than N seconds. Set to 0 for fresh content (same as Bypass Cache), or higher values to allow faster responses from cache.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Page Ready Timing",
+      "description": "When to consider a page fully loaded. Later timings wait longer but capture more dynamic content.",
+      "value": "Default",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "Default",
+          "description": "The default pipeline optimized for most websites and LLM input."
+        },
+        {
+          "label": "HTML Only",
+          "description": "Returns documentElement.outerHTML."
+        },
+        {
+          "label": "Visible Content",
+          "description": "reader.demo.headers.visible-content_explain"
+        },
+        {
+          "label": "DOM Stable",
+          "description": "reader.demo.headers.mutation-idle_explain"
+        },
+        {
+          "label": "Resources Loaded",
+          "description": "reader.demo.headers.resource-idle_explain"
+        },
+        {
+          "label": "Media Loaded",
+          "description": "reader.demo.headers.media-idle_explain"
+        },
+        {
+          "label": "Network Idle",
+          "description": "reader.demo.headers.network-idle_explain"
+        }
+      ]
+    },
+    {
+      "name": "Custom User-Agent",
+      "description": "Override the browser User-Agent string. Useful for accessing sites that require specific browsers or block crawlers.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Custom Referer",
+      "description": "Set the HTTP Referer header. Some sites check this to verify traffic comes from expected sources.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Preserve Base64 Images",
+      "description": "Keep inline base64-encoded images in markdown output instead of converting them to external URLs.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Do Not Cache or Track",
+      "description": "Prevent this request from being cached or logged on our servers. Use for sensitive URLs.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Github Flavored Markdown",
+      "description": "Opt in/out features from GFM (Github Flavored Markdown).",
+      "value": "Enabled",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "Enabled",
+          "description": "GFM (Github Flavored Markdown) features enabled."
+        },
+        {
+          "label": "Disabled",
+          "description": "GFM (Github Flavored Markdown) features disabled."
+        },
+        {
+          "label": "No GFM Table",
+          "description": "Opt out GFM Table but keep the table HTML elements in response."
+        }
+      ]
+    },
+    {
+      "name": "Stream Mode",
+      "description": "Stream mode is beneficial for large target pages, allowing more time for the page to fully render. If standard mode results in incomplete content, consider using Stream mode.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Customize Browser Locale",
+      "description": "Control the browser locale to render the page. Lots of websites serve different content based on the locale.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Respect robots.txt",
+      "description": "Check robots.txt rules before fetching. Specify which bot name to use for the check.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Include iframe Content",
+      "description": "Extract content from embedded iframes. Enable for pages with content loaded in iframes.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Include Shadow DOM",
+      "description": "Extract content from Shadow DOM components. Enable for pages using web components.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Use Final URL as Base",
+      "description": "Resolve relative URLs using the final destination URL after redirects, instead of the original URL.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Local PDF/HTML file",
+      "description": "Use Reader on your local PDF and HTML file by uploading them. Only support pdf and html files. For HTML, please also specify a reference URL for better parsing related CSS/JS scripts.",
+      "value": "",
+      "fieldType": "input"
+    },
+    {
+      "name": "Run JavaScript Before Extraction",
+      "description": "Execute custom JS to modify the page before content extraction. Can be inline code or a URL to a script file.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Heading Style",
+      "description": "Sets markdown heading format (passed to Turndown).",
+      "value": "Hash Style",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "Underline Style",
+          "description": "Uses === or --- underlines below heading text (H1/H2 only)."
+        },
+        {
+          "label": "Hash Style",
+          "description": "Uses # symbols before heading text (# H1, ## H2, etc.)."
+        }
+      ]
+    },
+    {
+      "name": "Horizontal Rule Style",
+      "description": "Defines markdown horizontal rule format (passed to Turndown).",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "Bullet Point Style",
+      "description": "Sets bullet list marker character (passed to Turndown).",
+      "value": "*",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "*",
+          "description": ""
+        },
+        {
+          "label": "-",
+          "description": ""
+        },
+        {
+          "label": "+",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Emphasis Style",
+      "description": "Defines markdown emphasis delimiter (passed to Turndown).",
+      "value": "_",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "_",
+          "description": ""
+        },
+        {
+          "label": "*",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Strong Emphasis Style",
+      "description": "Sets markdown strong emphasis delimiter (passed to Turndown).",
+      "value": "**",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "**",
+          "description": ""
+        },
+        {
+          "label": "__",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "name": "Link Style",
+      "description": "Determines markdown link format (passed to Turndown).",
+      "value": "Inline",
+      "fieldType": "select",
+      "options": [
+        {
+          "label": "Inline",
+          "description": "Links embedded directly within the text."
+        },
+        {
+          "label": "Reference",
+          "description": "Links listed at the end, referenced by numbers in the text."
+        },
+        {
+          "label": "Plain Text",
+          "description": "Links replaced with their anchor text."
+        }
+      ]
+    },
+    {
+      "name": "EU Residency",
+      "description": "When enabled, infrastructure and data processing for this request are located within the EU.",
+      "value": "false",
+      "fieldType": "toggle"
+    }
+  ]
+}
