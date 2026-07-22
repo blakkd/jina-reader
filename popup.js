@@ -172,7 +172,8 @@ function buildApiRequest(params) {
     'Underline Style': 'setext',
     'Hash Style': 'atx',
   };
-  headers['X-Md-Heading-Style'] = headingMap[params['Heading Style']];
+  const headingVal = headingMap[params['Heading Style']];
+  if (headingVal) headers['X-Md-Heading-Style'] = headingVal;
 
   // Horizontal Rule Style
   if (params['Horizontal Rule Style'] === 'true' && params['hrStyleValue']) {
