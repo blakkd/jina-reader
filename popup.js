@@ -461,6 +461,28 @@ async function switchLevel(level) {
   });
 
   await chrome.storage.local.set({ level });
+
+  // Load new level's param defs first to know which params are visible
+  try {
+    const resp = await fetch(PARAM_FILES[level]);
+    const data = await resp.json();
+    const currentParamNames = new Set(data.parameters.map((d) => d.name));
+
+    // Reset hidden params to defaults by removing their stored values
+    const allStored = await chrome.storage.local.get(null);
+    const keysToRemove = [];
+    for (const key of Object.keys(allStored)) {
+      if (key.startsWith('param_') && !currentParamNames.has(key.slice(6))) {
+        keysToRemove.push(key);
+      }
+    }
+    if (keysToRemove.length) {
+      await chrome.storage.local.remove(keysToRemove);
+    }
+  } catch (err) {
+    console.error('Failed to reset hidden params:', err);
+  }
+
   await loadParams(level);
 }
 
