@@ -428,9 +428,17 @@ function createExtraInput(def) {
   return extra;
 }
 
+function isSharedParam(name) {
+  return name === 'Add API Key for Higher Rate Limit' || name === 'apiKey';
+}
+
+function paramKey(name) {
+  return isSharedParam(name) ? `param_${name}` : `param_${currentLevel}_${name}`;
+}
+
 async function handleParamChange(name, value, def) {
-  // Save to storage
-  await chrome.storage.local.set({ [`param_${name}`]: value });
+  // Save to storage (level-specific, except API key which is shared)
+  await chrome.storage.local.set({ [paramKey(name)]: value });
 
   // Toggle extra visibility
   if (def.fieldType === 'toggle') {
@@ -443,10 +451,11 @@ async function handleParamChange(name, value, def) {
       const key = extra.dataset.param;
       const storedKey = extra.querySelector('input, textarea')?.dataset.key;
       if (storedKey) {
-        const stored = await chrome.storage.local.get(`param_${storedKey}`);
+        const key = paramKey(storedKey);
+        const stored = await chrome.storage.local.get(key);
         const inputEl = extra.querySelector('input, textarea');
-        if (inputEl && stored[`param_${storedKey}`] !== undefined) {
-          inputEl.value = stored[`param_${storedKey}`];
+        if (inputEl && stored[key] !== undefined) {
+          inputEl.value = stored[key];
         }
       }
     }
@@ -461,28 +470,6 @@ async function switchLevel(level) {
   });
 
   await chrome.storage.local.set({ level });
-
-  // Load new level's param defs first to know which params are visible
-  try {
-    const resp = await fetch(PARAM_FILES[level]);
-    const data = await resp.json();
-    const currentParamNames = new Set(data.parameters.map((d) => d.name));
-
-    // Reset hidden params to defaults by removing their stored values
-    const allStored = await chrome.storage.local.get(null);
-    const keysToRemove = [];
-    for (const key of Object.keys(allStored)) {
-      if (key.startsWith('param_') && !currentParamNames.has(key.slice(6))) {
-        keysToRemove.push(key);
-      }
-    }
-    if (keysToRemove.length) {
-      await chrome.storage.local.remove(keysToRemove);
-    }
-  } catch (err) {
-    console.error('Failed to reset hidden params:', err);
-  }
-
   await loadParams(level);
 }
 
@@ -496,7 +483,7 @@ async function loadParams(level) {
     const allStored = await chrome.storage.local.get(null);
 
     paramDefs.forEach((def) => {
-      const storedKey = `param_${def.name}`;
+      const storedKey = paramKey(def.name);
       if (allStored[storedKey] !== undefined) {
         def.value = allStored[storedKey];
       }
@@ -507,8 +494,11 @@ async function loadParams(level) {
     // Restore extra input values
     document.querySelectorAll('.param-extra input, .param-extra textarea').forEach((el) => {
       const key = el.dataset.key;
-      if (key && allStored[`param_${key}`] !== undefined) {
-        el.value = allStored[`param_${key}`];
+      if (key) {
+        const storedKey = paramKey(key);
+        if (allStored[storedKey] !== undefined) {
+          el.value = allStored[storedKey];
+        }
       }
     });
   } catch (err) {
@@ -550,19 +540,21 @@ async function readPage() {
   try {
     // Collect all parameter values
     const paramStore = await chrome.storage.local.get(
-      paramDefs.map((p) => `param_${p.name}`)
+      paramDefs.map((p) => paramKey(p.name))
     );
 
     const params = {};
     paramDefs.forEach((def) => {
-      params[def.name] = paramStore[`param_${def.name}`] ?? def.value;
+      const storedKey = paramKey(def.name);
+      params[def.name] = paramStore[storedKey] ?? def.value;
     });
 
     // Also collect extra input values
     document.querySelectorAll('.param-extra input, .param-extra textarea').forEach((el) => {
       const key = el.dataset.key;
       if (key) {
-        const storedVal = paramStore[`param_${key}`];
+        const storedKey = paramKey(key);
+        const storedVal = paramStore[storedKey];
         params[key] = storedVal ?? el.value;
       }
     });
