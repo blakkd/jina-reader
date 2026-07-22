@@ -81,6 +81,12 @@
       "fieldType": "toggle"
     },
     {
+      "name": "Max Tokens",
+      "description": "Allow up to N tokens in the response output. Increasing this value prevents content truncation for longer pages.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
       "name": "Use ReaderLM-v2",
       "description": "Uses ReaderLM-v2 for HTML to Markdown conversion, to deliver high-quality results for websites with complex structures and contents. Costs 3x tokens!",
       "value": "false",

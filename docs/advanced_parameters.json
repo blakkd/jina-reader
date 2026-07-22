@@ -75,8 +75,8 @@
       "fieldType": "toggle"
     },
     {
-      "name": "Token Budget",
-      "description": "Limits the maximum number of tokens used for this request. Exceeding this limit will cause the request to fail.",
+      "name": "Max Tokens",
+      "description": "Allow up to N tokens in the response output. Increasing this value prevents content truncation for longer pages.",
       "value": "false",
       "fieldType": "toggle"
     },
@@ -133,26 +133,8 @@
       ]
     },
     {
-      "name": "Forward Cookie",
-      "description": "Our API server can forward your custom cookie settings when accessing the URL, which is useful for pages requiring extra authentication. Note that requests with cookies will not be cached.",
-      "value": "false",
-      "fieldType": "toggle"
-    },
-    {
       "name": "Image Caption",
       "description": "Captions all images at the specified URL, adding 'Image [idx]: [caption]' as an alt tag for those without one. This allows downstream LLMs to interact with the images in activities such as reasoning and summarizing.",
-      "value": "false",
-      "fieldType": "toggle"
-    },
-    {
-      "name": "Use a Proxy Server",
-      "description": "Our API server can utilize your proxy to access URLs, which is helpful for pages accessible only through specific proxies.",
-      "value": "false",
-      "fieldType": "toggle"
-    },
-    {
-      "name": "Use a Country-Specific Proxy Server",
-      "description": "Set country code for location-based proxy server. Use 'auto' for optimal selection or 'none' to disable.",
       "value": "false",
       "fieldType": "toggle"
     },
@@ -163,58 +145,8 @@
       "fieldType": "toggle"
     },
     {
-      "name": "Cache Tolerance (seconds)",
-      "description": "Accept cached content if younger than N seconds. Set to 0 for fresh content (same as Bypass Cache), or higher values to allow faster responses from cache.",
-      "value": "false",
-      "fieldType": "toggle"
-    },
-    {
-      "name": "Preserve Base64 Images",
-      "description": "Keep inline base64-encoded images in markdown output instead of converting them to external URLs.",
-      "value": "false",
-      "fieldType": "toggle"
-    },
-    {
       "name": "Do Not Cache or Track",
       "description": "Prevent this request from being cached or logged on our servers. Use for sensitive URLs.",
-      "value": "false",
-      "fieldType": "toggle"
-    },
-    {
-      "name": "Github Flavored Markdown",
-      "description": "Opt in/out features from GFM (Github Flavored Markdown).",
-      "value": "Enabled",
-      "fieldType": "select",
-      "options": [
-        {
-          "label": "Enabled",
-          "description": "GFM (Github Flavored Markdown) features enabled."
-        },
-        {
-          "label": "Disabled",
-          "description": "GFM (Github Flavored Markdown) features disabled."
-        },
-        {
-          "label": "No GFM Table",
-          "description": "Opt out GFM Table but keep the table HTML elements in response."
-        }
-      ]
-    },
-    {
-      "name": "Stream Mode",
-      "description": "Stream mode is beneficial for large target pages, allowing more time for the page to fully render. If standard mode results in incomplete content, consider using Stream mode.",
-      "value": "false",
-      "fieldType": "toggle"
-    },
-    {
-      "name": "Customize Browser Locale",
-      "description": "Control the browser locale to render the page. Lots of websites serve different content based on the locale.",
-      "value": "false",
-      "fieldType": "toggle"
-    },
-    {
-      "name": "Respect robots.txt",
-      "description": "Check robots.txt rules before fetching. Specify which bot name to use for the check.",
       "value": "false",
       "fieldType": "toggle"
     },
@@ -311,12 +243,6 @@
           "description": "Links replaced with their anchor text."
         }
       ]
-    },
-    {
-      "name": "EU Residency",
-      "description": "When enabled, infrastructure and data processing for this request are located within the EU.",
-      "value": "false",
-      "fieldType": "toggle"
     }
   ]
 }
