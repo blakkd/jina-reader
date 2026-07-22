@@ -325,6 +325,7 @@ function renderParams(defs) {
         const option = document.createElement('option');
         option.value = opt.label;
         option.textContent = opt.label;
+        if (opt.description) option.title = opt.description;
         if (opt.label === def.value) option.selected = true;
         select.appendChild(option);
       });
