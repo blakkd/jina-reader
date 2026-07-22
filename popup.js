@@ -384,7 +384,7 @@ function createExtraInput(def) {
   extra.dataset.param = def.name;
 
   const inputMap = {
-    'Add API Key for Higher Rate Limit': { type: 'text', placeholder: 'jina_xxxx...', key: 'apiKey' },
+    'Add API Key for Higher Rate Limit': { type: 'password', placeholder: 'jina_xxxx...', key: 'apiKey' },
     'Timeout (seconds)': { type: 'number', placeholder: '60', key: 'timeoutValue' },
     'Token Budget': { type: 'number', placeholder: '10000', key: 'tokenBudgetValue' },
     'Max Tokens': { type: 'number', placeholder: '50000', key: 'maxTokensValue' },
@@ -421,6 +421,29 @@ function createExtraInput(def) {
   input.dataset.key = config.key || def.name;
 
   input.value = '';
+
+  if (config.type === 'password') {
+    const wrap = document.createElement('div');
+    wrap.style.display = 'flex';
+    wrap.style.alignItems = 'center';
+    wrap.style.gap = '6px';
+
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'key-toggle';
+    toggle.textContent = '👁';
+    toggle.title = 'Show/Hide key';
+    toggle.addEventListener('click', () => {
+      input.type = input.type === 'password' ? 'text' : 'password';
+    });
+
+    wrap.appendChild(input);
+    wrap.appendChild(toggle);
+    extra.appendChild(wrap);
+
+    return extra;
+  }
+
   input.addEventListener('input', (e) => {
     handleParamChange(config.key || def.name, e.target.value, def);
   });
