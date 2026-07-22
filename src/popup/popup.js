@@ -1,9 +1,9 @@
 // Popup controller for Jina Reader extension
 
 const PARAM_FILES = {
-  simple: 'docs/simple_parameters.json',
-  advanced: 'docs/advanced_parameters.json',
-  expert: 'docs/expert_parameters.json',
+  simple: '../params/simple.json',
+  advanced: '../params/advanced.json',
+  expert: '../params/expert.json',
 };
 
 let currentLevel = 'advanced';
