@@ -36,7 +36,7 @@ function buildApiRequest(params) {
 
   // Content Format
   const formatMap = {
-    'Default': null,
+    'Default': '',
     'Markdown': 'markdown',
     'HTML': 'html',
     'Text': 'text',
@@ -121,10 +121,8 @@ function buildApiRequest(params) {
     headers['X-Proxy'] = params['proxyCountryValue'];
   }
 
-  // Bypass Cached Content
-  if (params['Bypass Cached Content'] === 'true') {
-    headers['X-No-Cache'] = 'true';
-  }
+  // Bypass Cached Content (always enabled)
+  headers['X-No-Cache'] = 'true';
 
   // Cache Tolerance
   if (params['Cache Tolerance (seconds)'] === 'true' && params['cacheToleranceValue']) {
