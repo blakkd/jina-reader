@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <svg viewBox="0 0 32 32" width="28" height="28">
+          <rect width="32" height="32" rx="6" fill="#252525"/>
+          <text x="16" y="22" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="system-ui">J</text>
+        </svg>
+        <h1>Jina Reader</h1>
+      </div>
+      <div class="level-selector">
+        <button class="level-btn" data-level="simple">Simple</button>
+        <button class="level-btn active" data-level="advanced">Advanced</button>
+        <button class="level-btn" data-level="expert">Expert</button>
+      </div>
+    </header>
+
+    <section class="params-section">
+      <div id="parameters"></div>
+    </section>
+
+    <section class="actions-section">
+      <div class="url-field">
+        <label for="targetUrl">Target URL</label>
+        <input type="url" id="targetUrl" placeholder="Will use current tab">
+      </div>
+
+      <div class="display-mode">
+        <label for="displayMode">Open result in</label>
+        <select id="displayMode">
+          <option value="new">New tab</option>
+          <option value="current">Current tab</option>
+        </select>
+      </div>
+
+      <button id="readBtn" class="read-btn">
+        <span class="btn-text">Read this page</span>
+        <span class="btn-loader" hidden></span>
+      </button>
+
+      <div id="errorBox" class="error-box" hidden></div>
+    </section>
+  </div>
+
+  <!-- Rate limit info panel -->
+  <div id="rateLimitInfo" class="rate-limit-info" hidden>
+    <p>API keys provide higher rate limits. See <a href="https://jina.ai" target="_blank">jina.ai</a> for details.</p>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

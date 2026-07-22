@@ -1,0 +1,322 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: #1a1a1a;
+  background: #fafafa;
+  min-width: 380px;
+  max-width: 420px;
+}
+
+.container {
+  padding: 12px;
+}
+
+header {
+  margin-bottom: 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.logo h1 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.level-selector {
+  display: flex;
+  background: #eee;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.level-btn {
+  flex: 1;
+  padding: 5px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.15s;
+}
+
+.level-btn.active {
+  background: #fff;
+  color: #1a1a1a;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.level-btn:hover:not(.active) {
+  color: #333;
+}
+
+.params-section {
+  max-height: 340px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+  padding-right: 4px;
+}
+
+.params-section::-webkit-scrollbar {
+  width: 4px;
+}
+
+.params-section::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.param-item {
+  margin-bottom: 6px;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.param-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.param-header:hover {
+  background: #f8f8f8;
+}
+
+.param-label {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.param-desc {
+  font-size: 11px;
+  color: #888;
+  padding: 0 10px 8px;
+  line-height: 1.4;
+}
+
+.param-collapse {
+  font-size: 10px;
+  color: #999;
+  padding: 0 10px 8px;
+  line-height: 1.4;
+}
+
+/* Toggle */
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  top: 2px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.toggle input:checked + .toggle-slider {
+  background: #2563eb;
+}
+
+.toggle input:checked + .toggle-slider::before {
+  transform: translateX(16px);
+}
+
+/* Select dropdown */
+.param-select {
+  flex-shrink: 0;
+  padding: 3px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  background: #fff;
+  cursor: pointer;
+  max-width: 140px;
+}
+
+/* Hidden input field that appears when toggle is on */
+.param-extra {
+  padding: 0 10px 10px;
+  display: none;
+}
+
+.param-extra.visible {
+  display: block;
+}
+
+.param-extra input[type="text"],
+.param-extra input[type="url"],
+.param-extra input[type="number"],
+.param-extra textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.param-extra input:focus,
+.param-extra textarea:focus {
+  border-color: #2563eb;
+}
+
+.param-extra textarea {
+  resize: vertical;
+  min-height: 48px;
+}
+
+.actions-section {
+  border-top: 1px solid #e8e8e8;
+  padding-top: 10px;
+}
+
+.url-field,
+.display-mode {
+  margin-bottom: 8px;
+}
+
+.url-field label,
+.display-mode label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.url-field input {
+  width: 100%;
+  padding: 7px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+}
+
+.url-field input:focus {
+  border-color: #2563eb;
+}
+
+.display-mode select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.read-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.read-btn:hover {
+  background: #1d4ed8;
+}
+
+.read-btn:disabled {
+  background: #93b4f5;
+  cursor: not-allowed;
+}
+
+.btn-loader {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-box {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  color: #b91c1c;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.rate-limit-info {
+  padding: 10px 12px;
+  font-size: 11px;
+  color: #666;
+  border-top: 1px solid #e8e8e8;
+  line-height: 1.4;
+}
+
+.rate-limit-info a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.rate-limit-info a:hover {
+  text-decoration: underline;
+}
