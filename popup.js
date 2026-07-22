@@ -623,6 +623,7 @@ async function displayResult(content, mode) {
     line-height: 1.7;
     color: #1a1a1a;
     font-size: 15px;
+    white-space: pre-wrap;
   }
   h1 { font-size: 24px; margin-bottom: 16px; }
   pre { background: #f5f5f5; padding: 12px; border-radius: 6px; overflow-x: auto; }
