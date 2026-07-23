@@ -339,10 +339,14 @@ function buildApiRequest(params) {
 }
 
 // Render parameter fields
-function renderParams(defs) {
+async function renderParams(defs) {
   const container = document.getElementById('parameters');
   container.innerHTML = '';
   const level = currentLevel;
+
+  // Batch-read collapsed state for all params
+  const collapsedKeys = defs.map((d) => `collapsed_${currentLevel}_${d.name}`);
+  const collapsedState = await chrome.storage.local.get(collapsedKeys);
 
   defs.forEach((def) => {
     const item = document.createElement('div');
@@ -352,9 +356,19 @@ function renderParams(defs) {
     const header = document.createElement('div');
     header.className = 'param-header';
 
+    const wrapper = document.createElement('span');
+    wrapper.className = 'param-label-wrapper';
+
+    // Restore collapsed state from storage
+    const collapsedKey = `collapsed_${currentLevel}_${def.name}`;
+    if (collapsedState[collapsedKey]) {
+      wrapper.classList.add('collapsed');
+    }
+
     const label = document.createElement('span');
     label.className = 'param-label';
     label.textContent = def.name;
+    wrapper.appendChild(label);
 
     if (def.fieldType === 'toggle') {
       const toggle = document.createElement('label');
@@ -365,6 +379,7 @@ function renderParams(defs) {
       input.dataset.param = def.name;
       input.checked = def.value === 'true';
       input.addEventListener('change', (e) => {
+        e.stopPropagation();
         handleParamChange(def.name, e.target.checked ? 'true' : 'false', def);
       });
 
@@ -373,7 +388,7 @@ function renderParams(defs) {
 
       toggle.appendChild(input);
       toggle.appendChild(slider);
-      header.appendChild(label);
+      header.appendChild(wrapper);
       header.appendChild(toggle);
     } else if (def.fieldType === 'select') {
       const select = document.createElement('select');
@@ -390,10 +405,11 @@ function renderParams(defs) {
       });
 
       select.addEventListener('change', (e) => {
+        e.stopPropagation();
         handleParamChange(def.name, e.target.value, def);
       });
 
-      header.appendChild(label);
+      header.appendChild(wrapper);
       header.appendChild(select);
     } else if (def.fieldType === 'input') {
       const input = document.createElement('input');
@@ -406,12 +422,31 @@ function renderParams(defs) {
       input.placeholder = 'Enter value';
 
       input.addEventListener('input', (e) => {
+        e.stopPropagation();
         handleParamChange(def.name, e.target.value, def);
       });
 
-      header.appendChild(label);
+      header.appendChild(wrapper);
       header.appendChild(input);
     }
+
+    // Collapse handler on the entire header row
+    header.addEventListener('click', async (e) => {
+      if (e.target.closest('.toggle, .param-select, input, select')) return;
+      e.stopPropagation();
+      const wasCollapsed = wrapper.classList.toggle('collapsed');
+      const desc = item.querySelector('.param-desc');
+      if (desc) {
+        desc.classList.toggle('hidden');
+      }
+      const extra = item.querySelector('.param-extra');
+      if (extra) {
+        const toggleInput = item.querySelector('.toggle input');
+        const shouldShow = !wasCollapsed && toggleInput && toggleInput.checked;
+        extra.classList.toggle('visible', shouldShow);
+      }
+      await chrome.storage.local.set({ [collapsedKey]: wrapper.classList.contains('collapsed') });
+    });
 
     item.appendChild(header);
 
@@ -638,16 +673,16 @@ async function loadParams(level) {
       }
     });
 
-    renderParams(paramDefs);
+    await renderParams(paramDefs);
 
-    // Restore extra input values
+    // Restore extra input values — wait a frame for DOM to settle
+    await new Promise(r => requestAnimationFrame(r));
     document.querySelectorAll('.param-extra input, .param-extra textarea').forEach((el) => {
       const key = el.dataset.key;
       if (key) {
         const storedKey = paramKey(key);
         if (allStored[storedKey] !== undefined) {
           el.value = allStored[storedKey];
-          el.dispatchEvent(new InputEvent('input'));
         }
       }
     });
