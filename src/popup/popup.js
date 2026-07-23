@@ -765,51 +765,17 @@ async function readPage() {
 
 async function displayResult(content, mode) {
   const theme = document.documentElement.getAttribute('data-theme') || 'light';
-  const isDark = theme === 'dark';
-  const textColor = isDark ? '#e4e4e7' : '#1a1a1a';
-  const bg = isDark ? '#09090b' : '#fff';
-  const preBg = isDark ? '#18181b' : '#f5f5f5';
-  const linkColor = isDark ? '#60a5fa' : '#2563eb';
-  const resultHtml = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<style>
-  body {
-    font-family: system-ui, -apple-system, sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 24px;
-    line-height: 1.7;
-    color: ${textColor};
-    background: ${bg};
-    font-size: 15px;
-    white-space: pre-wrap;
-  }
-  h1 { font-size: 24px; margin-bottom: 16px; }
-  pre { background: ${preBg}; padding: 12px; border-radius: 6px; overflow-x: auto; }
-  code { font-size: 13px; }
-  a { color: ${linkColor}; }
-  img { max-width: 100%; }
-</style>
-</head>
-<body>
-${content}
-</body>
-</html>`;
+  await chrome.storage.session.set({ resultPage: { text: content, theme } });
 
-  const blob = new Blob([resultHtml], { type: 'text/html' });
-  const dataUrl = URL.createObjectURL(blob);
-
+  const resultUrl = chrome.runtime.getURL('src/result/result.html');
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
   if (mode === 'current') {
-    await chrome.tabs.update(tab.id, { url: dataUrl });
+    await chrome.tabs.update(tab.id, { url: resultUrl });
   } else {
-    await chrome.tabs.create({ url: dataUrl, active: true });
+    await chrome.tabs.create({ url: resultUrl, active: true });
   }
 
-  // Close popup after action
   window.close();
 }
 
