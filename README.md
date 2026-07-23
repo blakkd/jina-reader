@@ -4,7 +4,7 @@ Chromium extension for extracting webpage content via the [Jina Reader API](http
 
 Three configuration levels: Simple, Advanced, and Expert, from basic extraction (same as if you visited `r.jina.ai/<URL>`) to fine-grained control (browser engine, selectors, proxy, cookies, headers, and more).
 
-<img width="400" height="598" alt="Screenshot from 2026-07-23 02-04-31" src="https://github.com/user-attachments/assets/6aa709cf-ee21-4a00-8e66-e15f50211a73" />
+<img width="400" height="598" alt="Screenshot" src="https://github.com/user-attachments/assets/6aa709cf-ee21-4a00-8e66-e15f50211a73" />
 
 ### Installation
 
@@ -27,3 +27,9 @@ Then:
 ### API Key
 
 Optional. The extension works without one, but an API key provides higher rate limits. Get one at [jina.ai](https://jina.ai).
+
+### Thanks
+
+*This repo is a tribute to [bottlecapai/ThinkingCap-Qwen3.6-27B](https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B) and was entirely vibecoded using [ThinkingCap-Qwen3.6-27B-Q4_K_M.gguf](https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF/blob/main/ThinkingCap-Qwen3.6-27B-Q4_K_M.gguf)*
+
+<a href="https://bottlecapai.com/"><img width="276" height="155" alt="cap_header" src="https://github.com/user-attachments/assets/af9087ea-bf97-4b3a-bfd3-00e731852a05" /></a>
