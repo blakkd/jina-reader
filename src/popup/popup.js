@@ -796,12 +796,23 @@ function applyTheme(theme) {
 
 async function initTheme() {
   const stored = await chrome.storage.local.get('theme');
+  const current = document.documentElement.getAttribute('data-theme');
   if (stored.theme) {
-    applyTheme(stored.theme);
+    if (stored.theme !== current) {
+      applyTheme(stored.theme);
+    } else {
+      const btn = document.getElementById('themeToggle');
+      if (btn) btn.textContent = stored.theme === 'dark' ? '☀️' : '🌙';
+    }
     return;
   }
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(prefersDark ? 'dark' : 'light');
+  if (!current) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(prefersDark ? 'dark' : 'light');
+  } else {
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = current === 'dark' ? '☀️' : '🌙';
+  }
 }
 
 // Initialize
