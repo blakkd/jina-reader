@@ -1,6 +1,6 @@
 ## Jina Reader
 
-Chrome extension for extracting webpage content via the [Jina Reader API](https://jina.ai).
+Chromium extension for extracting webpage content via the [Jina Reader API](https://jina.ai).
 
 Three configuration levels: Simple, Advanced, and Expert, from basic extraction (same as if you visited `r.jina.ai/<URL>`) to fine-grained control (browser engine, selectors, proxy, cookies, headers, and more).
 
