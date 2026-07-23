@@ -25,12 +25,6 @@
           "description": "High-quality engine designed to resolve rendering issues and deliver the best content output."
         }
       ]
-    },
-    {
-      "name": "Timeout (seconds)",
-      "description": "Maximum time to wait for page load. Increase for slow pages, decrease for simple static pages.",
-      "value": "false",
-      "fieldType": "toggle"
     }
   ]
 }

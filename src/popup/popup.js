@@ -362,7 +362,9 @@ async function renderParams(defs) {
     // Restore collapsed state from storage
     const collapsedKey = `collapsed_${currentLevel}_${def.name}`;
     const isCollapsed = !!collapsedState[collapsedKey];
-    if (isCollapsed) {
+    if (!collapsedState.hasOwnProperty(collapsedKey)) {
+      wrapper.classList.add('collapsed');
+    } else if (isCollapsed) {
       wrapper.classList.add('collapsed');
     }
 
@@ -455,7 +457,7 @@ async function renderParams(defs) {
     if (def.description) {
       const desc = document.createElement('div');
       desc.className = 'param-desc';
-      if (isCollapsed) {
+      if (!collapsedState.hasOwnProperty(collapsedKey) || isCollapsed) {
         desc.classList.add('hidden');
       }
       desc.textContent = def.description;
@@ -463,10 +465,11 @@ async function renderParams(defs) {
     }
 
     // Extra input for toggle params
+    const defaultCollapsed = !collapsedState.hasOwnProperty(collapsedKey);
     if (def.fieldType === 'toggle') {
       const extra = createExtraInput(def);
       if (extra) {
-        const toggleShown = def.value === 'true' && !isCollapsed;
+        const toggleShown = def.value === 'true' && !defaultCollapsed && !isCollapsed;
         extra.classList.toggle('visible', toggleShown);
         item.appendChild(extra);
       }
