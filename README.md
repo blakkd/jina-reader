@@ -1,6 +1,6 @@
 ## Jina Reader
 
-Chromium extension for extracting webpage content via the [Jina Reader API](https://jina.ai).
+A Chromium extension for extracting webpage content via the [Jina Reader API](https://jina.ai).
 
 Three configuration levels: Simple, Advanced, and Expert, from basic extraction (same as if you visited `r.jina.ai/<URL>`) to fine-grained control (browser engine, selectors, proxy, cookies, headers, and more).
 
@@ -30,6 +30,8 @@ Optional. The extension works without one, but an API key provides higher rate l
 
 ### Thanks
 
-*This repo is a tribute to [bottlecapai/ThinkingCap-Qwen3.6-27B](https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B) and was entirely vibecoded using [ThinkingCap-Qwen3.6-27B-Q4_K_M.gguf](https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF/blob/main/ThinkingCap-Qwen3.6-27B-Q4_K_M.gguf)*
-
 <a href="https://bottlecapai.com/"><img width="276" height="155" alt="cap_header" src="https://github.com/user-attachments/assets/af9087ea-bf97-4b3a-bfd3-00e731852a05" /></a>
+
+_This repo is a tribute to [bottlecapai/ThinkingCap-Qwen3.6-27B](https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B) and was entirely vibecoded using [ThinkingCap-Qwen3.6-27B-Q4_K_M.gguf](https://huggingface.co/bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF/blob/main/ThinkingCap-Qwen3.6-27B-Q4_K_M.gguf) with [opencode](https://github.com/anomalyco/opencode), at some point using the [chrome DevTools](https://github.com/ChromeDevTools/chrome-devtools-mcp)._
+
+_Of course, and before anything else, thanks to **Qwen** for their already exceptional Qwen3.6-27B model, to **opencode** and finally to **[Jina AI](https://jina.ai)** ❤️_
