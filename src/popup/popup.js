@@ -649,6 +649,11 @@ async function resetLevelParams(level) {
     }
   });
 
+  // Also remove collapsed state keys for this level
+  paramDefs.forEach((p) => {
+    keysToRemove.push(`collapsed_${level}_${p.name}`);
+  });
+
   await chrome.storage.local.remove(keysToRemove);
   await loadParams(level);
 }
