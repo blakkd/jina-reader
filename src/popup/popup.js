@@ -361,7 +361,8 @@ async function renderParams(defs) {
 
     // Restore collapsed state from storage
     const collapsedKey = `collapsed_${currentLevel}_${def.name}`;
-    if (collapsedState[collapsedKey]) {
+    const isCollapsed = !!collapsedState[collapsedKey];
+    if (isCollapsed) {
       wrapper.classList.add('collapsed');
     }
 
@@ -454,6 +455,9 @@ async function renderParams(defs) {
     if (def.description) {
       const desc = document.createElement('div');
       desc.className = 'param-desc';
+      if (isCollapsed) {
+        desc.classList.add('hidden');
+      }
       desc.textContent = def.description;
       item.appendChild(desc);
     }
@@ -462,7 +466,8 @@ async function renderParams(defs) {
     if (def.fieldType === 'toggle') {
       const extra = createExtraInput(def);
       if (extra) {
-        extra.classList.toggle('visible', def.value === 'true');
+        const toggleShown = def.value === 'true' && !isCollapsed;
+        extra.classList.toggle('visible', toggleShown);
         item.appendChild(extra);
       }
     }
