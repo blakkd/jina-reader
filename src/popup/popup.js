@@ -764,6 +764,12 @@ async function readPage() {
 }
 
 async function displayResult(content, mode) {
+  const theme = document.documentElement.getAttribute('data-theme') || 'light';
+  const isDark = theme === 'dark';
+  const textColor = isDark ? '#e4e4e7' : '#1a1a1a';
+  const bg = isDark ? '#09090b' : '#fff';
+  const preBg = isDark ? '#18181b' : '#f5f5f5';
+  const linkColor = isDark ? '#60a5fa' : '#2563eb';
   const resultHtml = `<!DOCTYPE html>
 <html>
 <head>
@@ -775,14 +781,15 @@ async function displayResult(content, mode) {
     margin: 0 auto;
     padding: 24px;
     line-height: 1.7;
-    color: #1a1a1a;
+    color: ${textColor};
+    background: ${bg};
     font-size: 15px;
     white-space: pre-wrap;
   }
   h1 { font-size: 24px; margin-bottom: 16px; }
-  pre { background: #f5f5f5; padding: 12px; border-radius: 6px; overflow-x: auto; }
+  pre { background: ${preBg}; padding: 12px; border-radius: 6px; overflow-x: auto; }
   code { font-size: 13px; }
-  a { color: #2563eb; }
+  a { color: ${linkColor}; }
   img { max-width: 100%; }
 </style>
 </head>
@@ -812,8 +819,30 @@ function showError(msg) {
   errorBox.hidden = false;
 }
 
+// ── Theme helpers ──
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('themeToggle');
+  if (btn) {
+    btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+}
+
+async function initTheme() {
+  const stored = await chrome.storage.local.get('theme');
+  if (stored.theme) {
+    applyTheme(stored.theme);
+    return;
+  }
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(prefersDark ? 'dark' : 'light');
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
+  // Apply theme first to avoid flash
+  await initTheme();
+
   // Restore level from storage
   const stored = await chrome.storage.local.get('level');
   const level = stored.level || 'advanced';
@@ -842,6 +871,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('displayMode').addEventListener('change', async (e) => {
     await chrome.storage.local.set({ displayMode: e.target.value });
+  });
+
+  document.getElementById('themeToggle').addEventListener('click', async () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    await chrome.storage.local.set({ theme: next });
   });
 
   // Load params

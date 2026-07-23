@@ -1,3 +1,79 @@
+/* ── Theme variables ── */
+:root,
+[data-theme="light"] {
+  --color-text: #1a1a1a;
+  --color-text-muted: #888;
+  --color-text-subtle: #999;
+  --color-text-label: #666;
+  --color-bg: #fafafa;
+  --color-surface: #fff;
+  --color-surface-hover: #f8f8f8;
+  --color-surface-hover-btn: #f5f5f5;
+  --color-border: #e8e8e8;
+  --color-border-input: #ddd;
+  --color-border-input-focus: #2563eb;
+  --color-divider: #ccc;
+  --color-tgroup-bg: #eee;
+  --color-toggle-off: #ccc;
+  --color-toggle-knob: #fff;
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-disabled: #93b4f5;
+  --color-btn-loader-border: rgba(255,255,255,0.3);
+  --color-btn-loader-top: #fff;
+  --color-error-bg: #fef2f2;
+  --color-error-border: #fecaca;
+  --color-error-text: #b91c1c;
+  --color-reset-text: #666;
+  --color-reset-border: #e0e0e0;
+  --color-reset-hover-bg: #f5f5f5;
+  --color-reset-hover-border: #ccc;
+  --color-reset-hover-text: #333;
+  --color-key-toggle-bg: transparent;
+  --color-key-toggle-border: #ddd;
+  --color-key-toggle-hover: #f0f0f0;
+  --color-pre-bg: #f5f5f5;
+  --color-level-btn-inactive: #666;
+  --color-level-btn-hover: #333;
+}
+
+[data-theme="dark"] {
+  --color-text: #e4e4e7;
+  --color-text-muted: #a1a1aa;
+  --color-text-subtle: #71717a;
+  --color-text-label: #a1a1aa;
+  --color-bg: #09090b;
+  --color-surface: #18181b;
+  --color-surface-hover: #27272a;
+  --color-surface-hover-btn: #27272a;
+  --color-border: #27272a;
+  --color-border-input: #3f3f46;
+  --color-border-input-focus: #3b82f6;
+  --color-divider: #3f3f46;
+  --color-tgroup-bg: #27272a;
+  --color-toggle-off: #52525b;
+  --color-toggle-knob: #e4e4e7;
+  --color-accent: #3b82f6;
+  --color-accent-hover: #60a5fa;
+  --color-accent-disabled: #4b6fa0;
+  --color-btn-loader-border: rgba(255,255,255,0.2);
+  --color-btn-loader-top: #e4e4e7;
+  --color-error-bg: #1c1017;
+  --color-error-border: #3b1d2a;
+  --color-error-text: #f87171;
+  --color-reset-text: #a1a1aa;
+  --color-reset-border: #3f3f46;
+  --color-reset-hover-bg: #27272a;
+  --color-reset-hover-border: #52525b;
+  --color-reset-hover-text: #e4e4e7;
+  --color-key-toggle-bg: transparent;
+  --color-key-toggle-border: #3f3f46;
+  --color-key-toggle-hover: #27272a;
+  --color-pre-bg: #18181b;
+  --color-level-btn-inactive: #a1a1aa;
+  --color-level-btn-hover: #d4d4d8;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -12,8 +88,9 @@ html {
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 13px;
-  color: #1a1a1a;
-  background: #fafafa;
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: color 0.2s, background-color 0.2s;
 }
 
 .container {
@@ -34,12 +111,12 @@ header {
 .logo h1 {
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--color-text);
 }
 
 .level-selector {
   display: flex;
-  background: #eee;
+  background: var(--color-tgroup-bg);
   border-radius: 6px;
   padding: 2px;
 }
@@ -53,18 +130,18 @@ header {
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;
-  color: #666;
+  color: var(--color-level-btn-inactive);
   transition: all 0.15s;
 }
 
 .level-btn.active {
-  background: #fff;
-  color: #1a1a1a;
+  background: var(--color-surface);
+  color: var(--color-text);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .level-btn:hover:not(.active) {
-  color: #333;
+  color: var(--color-level-btn-hover);
 }
 
 .level-divider {
@@ -79,7 +156,7 @@ header {
   width: 90%;
   height: 4px;
   border: none;
-  border-bottom: 2px dashed #ccc;
+  border-bottom: 2px dashed var(--color-divider);
   border-radius: 2px;
   position: relative;
 }
@@ -91,24 +168,24 @@ header {
   bottom: 0;
   width: 4px;
   height: 8px;
-  border-bottom: 2px dashed #ccc;
+  border-bottom: 2px dashed var(--color-divider);
 }
 
 .divider-bracket::before {
   left: 0;
-  border-right: 2px dashed #ccc;
+  border-right: 2px dashed var(--color-divider);
   border-bottom: none;
 }
 
 .divider-bracket::after {
   right: 0;
-  border-left: 2px dashed #ccc;
+  border-left: 2px dashed var(--color-divider);
   border-bottom: none;
 }
 
 .divider-label {
   font-size: 10px;
-  color: #999;
+  color: var(--color-text-subtle);
   margin-top: 3px;
   letter-spacing: 0.2px;
 }
@@ -119,9 +196,9 @@ header {
 
 .param-item {
   margin-bottom: 6px;
-  border: 1px solid #e8e8e8;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--color-surface);
   overflow: hidden;
 }
 
@@ -135,7 +212,7 @@ header {
 }
 
 .param-header:hover {
-  background: #f8f8f8;
+  background: var(--color-surface-hover);
 }
 
 .param-label {
@@ -147,14 +224,14 @@ header {
 
 .param-desc {
   font-size: 11px;
-  color: #888;
+  color: var(--color-text-muted);
   padding: 0 10px 8px;
   line-height: 1.4;
 }
 
 .param-collapse {
   font-size: 10px;
-  color: #999;
+  color: var(--color-text-subtle);
   padding: 0 10px 8px;
   line-height: 1.4;
 }
@@ -176,7 +253,7 @@ header {
 .toggle-slider {
   position: absolute;
   inset: 0;
-  background: #ccc;
+  background: var(--color-toggle-off);
   border-radius: 20px;
   cursor: pointer;
   transition: 0.2s;
@@ -189,13 +266,13 @@ header {
   height: 16px;
   left: 2px;
   top: 2px;
-  background: #fff;
+  background: var(--color-toggle-knob);
   border-radius: 50%;
   transition: 0.2s;
 }
 
 .toggle input:checked + .toggle-slider {
-  background: #2563eb;
+  background: var(--color-accent);
 }
 
 .toggle input:checked + .toggle-slider::before {
@@ -206,12 +283,13 @@ header {
 .param-select {
   flex-shrink: 0;
   padding: 3px 6px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border-input);
   border-radius: 4px;
   font-size: 12px;
-  background: #fff;
+  background: var(--color-surface);
   cursor: pointer;
   max-width: 140px;
+  color: var(--color-text);
 }
 
 /* Hidden input field that appears when toggle is on */
@@ -227,20 +305,23 @@ header {
 .param-extra input[type="text"],
 .param-extra input[type="url"],
 .param-extra input[type="number"],
+.param-extra input[type="password"],
 .param-extra textarea {
   width: 100%;
   padding: 6px 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border-input);
   border-radius: 4px;
   font-size: 12px;
   font-family: inherit;
   outline: none;
   transition: border-color 0.15s;
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 .param-extra input:focus,
 .param-extra textarea:focus {
-  border-color: #2563eb;
+  border-color: var(--color-border-input-focus);
 }
 
 .param-extra textarea {
@@ -249,7 +330,7 @@ header {
 }
 
 .actions-section {
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 10px;
   margin-bottom: 12px;
 }
@@ -264,31 +345,34 @@ header {
   display: block;
   font-size: 11px;
   font-weight: 500;
-  color: #666;
+  color: var(--color-text-label);
   margin-bottom: 4px;
 }
 
 .url-field input {
   width: 100%;
   padding: 7px 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border-input);
   border-radius: 4px;
   font-size: 12px;
   font-family: inherit;
   outline: none;
+  background: var(--color-surface);
+  color: var(--color-text);
 }
 
 .url-field input:focus {
-  border-color: #2563eb;
+  border-color: var(--color-border-input-focus);
 }
 
 .display-mode select {
   width: 100%;
   padding: 6px 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border-input);
   border-radius: 4px;
   font-size: 12px;
-  background: #fff;
+  background: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
 }
 
@@ -297,7 +381,7 @@ header {
   padding: 10px;
   border: none;
   border-radius: 6px;
-  background: #2563eb;
+  background: var(--color-accent);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
@@ -310,19 +394,19 @@ header {
 }
 
 .read-btn:hover {
-  background: #1d4ed8;
+  background: var(--color-accent-hover);
 }
 
 .read-btn:disabled {
-  background: #93b4f5;
+  background: var(--color-accent-disabled);
   cursor: not-allowed;
 }
 
 .btn-loader {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
+  border: 2px solid var(--color-btn-loader-border);
+  border-top-color: var(--color-btn-loader-top);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
@@ -334,10 +418,10 @@ header {
 .error-box {
   margin-top: 8px;
   padding: 8px 10px;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
   border-radius: 4px;
-  color: #b91c1c;
+  color: var(--color-error-text);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -345,13 +429,13 @@ header {
 .rate-limit-info {
   padding: 10px 12px;
   font-size: 11px;
-  color: #666;
-  border-top: 1px solid #e8e8e8;
+  color: var(--color-text-label);
+  border-top: 1px solid var(--color-border);
   line-height: 1.4;
 }
 
 .rate-limit-info a {
-  color: #2563eb;
+  color: var(--color-accent);
   text-decoration: none;
 }
 
@@ -360,27 +444,28 @@ header {
 }
 
 .key-toggle {
-  background: none;
-  border: 1px solid #ddd;
+  background: var(--color-key-toggle-bg);
+  border: 1px solid var(--color-key-toggle-border);
   border-radius: 4px;
   padding: 2px 6px;
   font-size: 12px;
   cursor: pointer;
   line-height: 1;
+  color: var(--color-text);
 }
 
 .key-toggle:hover {
-  background: #f0f0f0;
+  background: var(--color-key-toggle-hover);
 }
 
 .reset-btn {
   width: 100%;
   margin-top: 10px;
   padding: 7px 10px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-reset-border);
   border-radius: 6px;
-  background: #fff;
-  color: #666;
+  background: var(--color-surface);
+  color: var(--color-reset-text);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -388,14 +473,14 @@ header {
 }
 
 .reset-btn:hover {
-  background: #f5f5f5;
-  border-color: #ccc;
-  color: #333;
+  background: var(--color-reset-hover-bg);
+  border-color: var(--color-reset-hover-border);
+  color: var(--color-reset-hover-text);
 }
 
 .min-value-error {
   display: none;
-  color: #b91c1c;
+  color: var(--color-error-text);
   font-size: 11px;
   margin-top: 4px;
 }
@@ -403,3 +488,25 @@ header {
 .min-value-error.show {
   display: block;
 }
+
+.theme-toggle {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--color-border-input);
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text);
+  font-size: 14px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: var(--color-surface-hover);
+}
+
