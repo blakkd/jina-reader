@@ -251,7 +251,7 @@ header {
 .param-desc {
   font-size: 11px;
   color: var(--color-text-muted);
-  padding: 0 10px 8px;
+  padding: 4px 10px 8px;
   line-height: 1.4;
   overflow: hidden;
   transition: max-height 0.2s ease, padding 0.2s ease, opacity 0.15s ease;
