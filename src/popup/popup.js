@@ -533,6 +533,11 @@ function createExtraInput(def) {
       input.type = input.type === 'password' ? 'text' : 'password';
     });
 
+    input.addEventListener('input', (e) => {
+      handleParamChange(config.key || def.name, e.target.value, null);
+      showError();
+    });
+
     wrap.appendChild(input);
     wrap.appendChild(toggle);
     extra.appendChild(wrap);
