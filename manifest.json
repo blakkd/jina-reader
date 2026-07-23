@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Jina Reader",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Extract webpage content using Jina Reader API",
   "permissions": ["storage", "activeTab", "tabs"],
   "action": {
