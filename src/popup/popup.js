@@ -831,6 +831,19 @@ async function readPage() {
 
 async function displayResult(content, mode) {
   const theme = document.documentElement.getAttribute('data-theme') || 'light';
+
+  // Images: open as raw data URL so browser handles zoom/save/copy natively
+  if (content.startsWith('data:image/')) {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (mode === 'current') {
+      await chrome.tabs.update(tab.id, { url: content });
+    } else {
+      await chrome.tabs.create({ url: content, active: true });
+    }
+    window.close();
+    return;
+  }
+
   await chrome.storage.session.set({ resultPage: { text: content, theme } });
 
   const resultUrl = chrome.runtime.getURL('src/result/result.html');
