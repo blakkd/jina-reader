@@ -66,7 +66,7 @@ const ALL_DEFAULTS = {
   'Emphasis Style': '_',
   'Strong Emphasis Style': '**',
   'Link Style': 'Inline',
-  'EU Residency': 'false',
+  'EU Residency': 'true',
 };
 
 // Mapping from friendly parameter name → API header/query param

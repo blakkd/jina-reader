@@ -429,7 +429,7 @@
     {
       "name": "EU Residency",
       "description": "When enabled, infrastructure and data processing for this request are located within the EU.",
-      "value": "false",
+      "value": "true",
       "fieldType": "toggle"
     }
   ]
