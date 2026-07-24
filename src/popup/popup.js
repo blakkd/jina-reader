@@ -1,3 +1,15 @@
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const parts = reader.result.split(',');
+      resolve(parts[1]);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 // Popup controller for Jina Reader extension
 
 const PARAM_FILES = {
@@ -796,6 +808,12 @@ async function readPage() {
         chunks += decoder.decode(value);
       }
       content = chunks;
+    } else if (contentType.includes('image/')) {
+      // Convert image to base64 data URL for display
+      const blob = await resp.blob();
+      const ext = contentType.split('/')[1].split(';')[0];
+      content = await blobToBase64(blob);
+      content = `data:image/${ext};base64,${content}`;
     } else {
       content = await resp.text();
     }
