@@ -44,7 +44,7 @@ const ALL_DEFAULTS = {
   'Image Caption': 'false',
   'Use a Proxy Server': 'false',
   'Use a Country-Specific Proxy Server': 'false',
-  'Bypass Cached Content': 'true',
+  'Bypass Cached Content': 'false',
   'Cache Tolerance (seconds)': 'false',
   'Page Ready Timing': 'Default',
   'Custom User-Agent': 'false',
