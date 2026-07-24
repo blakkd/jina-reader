@@ -410,18 +410,29 @@ async function renderParams(defs) {
       select.className = 'param-select';
       select.dataset.param = def.name;
 
+      const optionMap = {};
       (def.options || []).forEach((opt) => {
         const option = document.createElement('option');
         option.value = opt.label;
         option.textContent = opt.label;
         if (opt.description) option.title = opt.description;
+        optionMap[opt.label] = opt;
         if (opt.label === def.value) option.selected = true;
         select.appendChild(option);
       });
 
+      // Show description of the selected option as a tooltip on the <select> itself
+      const selectedOpt = optionMap[def.value];
+      if (selectedOpt && selectedOpt.description) {
+        select.title = selectedOpt.description;
+      }
+
       select.addEventListener('change', (e) => {
         e.stopPropagation();
         handleParamChange(def.name, e.target.value, def);
+        // Update tooltip for the new selection
+        const newOpt = optionMap[e.target.value];
+        select.title = newOpt && newOpt.description ? newOpt.description : '';
       });
 
       header.appendChild(wrapper);
