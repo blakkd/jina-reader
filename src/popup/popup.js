@@ -732,7 +732,8 @@ async function loadParams(level) {
   }
 }
 
-// Read page handler
+// Read page handler – delegates API call to background worker so it survives
+// popup close.
 async function readPage() {
   const btn = document.getElementById('readBtn');
   const errorBox = document.getElementById('errorBox');
@@ -745,7 +746,6 @@ async function readPage() {
   // Get target URL
   let url = urlInput.value.trim();
   if (!url) {
-    // Try to get current tab URL
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tab && tab.url) {
       url = tab.url;
@@ -764,7 +764,6 @@ async function readPage() {
   btn.querySelector('.btn-loader').hidden = false;
 
   try {
-    // Collect all parameter values
     const paramStore = await chrome.storage.local.get(
       paramDefs.map((p) => paramKey(p.name))
     );
@@ -775,7 +774,6 @@ async function readPage() {
       params[def.name] = paramStore[storedKey] ?? def.value;
     });
 
-    // Also collect extra input values
     document.querySelectorAll('.param-extra input, .param-extra textarea').forEach((el) => {
       const key = el.dataset.key;
       if (key) {
@@ -785,52 +783,20 @@ async function readPage() {
       }
     });
 
-    // Build API request
-    const { server, headers } = buildApiRequest(params);
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
 
-    // Make the request
-    const apiUrl = `${server}/${url}`;
-    const resp = await fetch(apiUrl, {
-      method: 'GET',
-      headers,
+    // Fire-and-forget: the background worker handles the API request and opens
+    // the result tab independently, so this survives popup close.
+    chrome.runtime.sendMessage({
+      type: 'READ_PAGE',
+      url,
+      params,
+      theme,
+      displayMode,
     });
 
-    if (!resp.ok) {
-      const errorData = await resp.json().catch(() => null);
-      throw new Error(
-        errorData?.error?.message || errorData?.detail || `API error: ${resp.status} ${resp.statusText}`
-      );
-    }
-
-    const contentType = resp.headers.get('content-type') || '';
-    let content;
-
-    if (contentType.includes('application/json')) {
-      const json = await resp.json();
-      content = typeof json.data === 'string' ? json.data : JSON.stringify(json.data, null, 2);
-    } else if (contentType.includes('text/event-stream')) {
-      // For SSE, collect all events
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let chunks = '';
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks += decoder.decode(value);
-      }
-      content = chunks;
-    } else if (contentType.includes('image/')) {
-      // Convert image to base64 data URL for display
-      const blob = await resp.blob();
-      const ext = contentType.split('/')[1].split(';')[0];
-      content = await blobToBase64(blob);
-      content = `data:image/${ext};base64,${content}`;
-    } else {
-      content = await resp.text();
-    }
-
-    // Display result
-    await displayResult(content, displayMode);
+    window.close();
+    return;
   } catch (err) {
     showError(err.message || 'An unknown error occurred.');
   } finally {
@@ -838,35 +804,6 @@ async function readPage() {
     btn.querySelector('.btn-text').hidden = false;
     btn.querySelector('.btn-loader').hidden = true;
   }
-}
-
-async function displayResult(content, mode) {
-  const theme = document.documentElement.getAttribute('data-theme') || 'light';
-
-  // Images: open as raw data URL so browser handles zoom/save/copy natively
-  if (content.startsWith('data:image/')) {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (mode === 'current') {
-      await chrome.tabs.update(tab.id, { url: content });
-    } else {
-      await chrome.tabs.create({ url: content, active: true });
-    }
-    window.close();
-    return;
-  }
-
-  await chrome.storage.session.set({ resultPage: { text: content, theme } });
-
-  const resultUrl = chrome.runtime.getURL('src/result/result.html');
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-  if (mode === 'current') {
-    await chrome.tabs.update(tab.id, { url: resultUrl });
-  } else {
-    await chrome.tabs.create({ url: resultUrl, active: true });
-  }
-
-  window.close();
 }
 
 function showError(msg) {
