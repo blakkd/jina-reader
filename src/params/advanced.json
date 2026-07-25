@@ -63,6 +63,18 @@
       ]
     },
     {
+      "name": "Bypass Cached Content",
+      "description": "Our API caches URL contents for a certain amount of time. Set it to true to ignore the cached result and fetch the content from the URL directly.",
+      "value": "false",
+      "fieldType": "toggle"
+    },
+    {
+      "name": "EU Residency",
+      "description": "When enabled, infrastructure and data processing for this request are located within the EU.",
+      "value": "true",
+      "fieldType": "toggle"
+    },
+    {
       "name": "JSON Response",
       "description": "The response will be in JSON format, containing the URL, title, content, and timestamp (if available).",
       "value": "false",
@@ -135,12 +147,6 @@
     {
       "name": "Image Caption",
       "description": "Captions all images at the specified URL, adding 'Image [idx]: [caption]' as an alt tag for those without one. This allows downstream LLMs to interact with the images in activities such as reasoning and summarizing.",
-      "value": "false",
-      "fieldType": "toggle"
-    },
-    {
-      "name": "Bypass Cached Content",
-      "description": "Our API caches URL contents for a certain amount of time. Set it to true to ignore the cached result and fetch the content from the URL directly.",
       "value": "false",
       "fieldType": "toggle"
     },
@@ -249,12 +255,6 @@
           "description": "Links replaced with their anchor text."
         }
       ]
-    },
-    {
-      "name": "EU Residency",
-      "description": "When enabled, infrastructure and data processing for this request are located within the EU.",
-      "value": "true",
-      "fieldType": "toggle"
     }
   ]
 }
