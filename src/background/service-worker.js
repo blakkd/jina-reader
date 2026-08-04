@@ -227,16 +227,24 @@ async function closeLoadingTab() {
   }
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type !== 'READ_PAGE') return;
+let readPageLocked = false;
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== 'local' || !changes.readPageRequest) return;
+
+  const req = changes.readPageRequest?.newValue;
+  if (!req || readPageLocked) return;
 
   (async () => {
+    readPageLocked = true;
     try {
+      await chrome.storage.local.remove('readPageRequest');
+
       chrome.action.setBadgeText({ text: '...' });
       chrome.action.setBadgeBackgroundColor({ color: '#4fc3f7' });
 
       const loadingUrl = chrome.runtime.getURL('src/loading/loading.html');
-      const loadingTheme = (message.theme || 'light') === 'dark' ? 'dark' : '';
+      const loadingTheme = (req.theme || 'light') === 'dark' ? 'dark' : '';
       const [ltab] = await chrome.tabs.query({ active: true, currentWindow: true });
       const loadingTab = await chrome.tabs.create({
         url: loadingUrl + (loadingTheme ? `#${loadingTheme}` : ''),
@@ -245,8 +253,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
       await chrome.storage.session.set({ loadingTabId: loadingTab.id });
 
-      const { server, headers } = buildApiRequest(message.params);
-      const apiUrl = `${server}/${message.url}`;
+      const { server, headers } = buildApiRequest(req.params);
+      const apiUrl = `${server}/${req.url}`;
       const resp = await fetch(apiUrl, { method: 'GET', headers });
 
       if (!resp.ok) {
@@ -281,8 +289,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         content = await resp.text();
       }
 
-      const theme = message.theme || 'light';
-      const mode = message.displayMode || 'new';
+      const theme = req.theme || 'light';
+      const mode = req.displayMode || 'new';
 
       await closeLoadingTab();
 
@@ -303,15 +311,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           await chrome.tabs.create({ url: resultUrl, active: true });
         }
       }
-
-      sendResponse({ success: true });
     } catch (err) {
       await closeLoadingTab();
-      sendResponse({ success: false, error: err.message || 'An unknown error occurred.' });
+      console.error('Jina Reader error:', err);
     } finally {
       chrome.action.setBadgeText({ text: '' });
+      readPageLocked = false;
     }
   })();
-
-  return true;
 });

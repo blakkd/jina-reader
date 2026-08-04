@@ -785,14 +785,17 @@ async function readPage() {
 
     const theme = document.documentElement.getAttribute('data-theme') || 'light';
 
-    // Fire-and-forget: the background worker handles the API request and opens
-    // the result tab independently, so this survives popup close.
-    chrome.runtime.sendMessage({
-      type: 'READ_PAGE',
-      url,
-      params,
-      theme,
-      displayMode,
+    // Use storage.local as a reliable IPC channel. storage.session is tied to
+    // the popup tab and gets wiped when the popup closes, so the service worker
+    // never sees the change. storage.local persists and guarantees the
+    // onChanged event fires even when the worker is dormant.
+    await chrome.storage.local.set({
+      readPageRequest: {
+        url,
+        params,
+        theme,
+        displayMode,
+      },
     });
 
     window.close();
